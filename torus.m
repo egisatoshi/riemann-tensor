@@ -10,7 +10,7 @@ X={(a*Cos[θ]+b)Cos[φ],
 
 (* Local coordinates *)
 
-e=Table[D[X[[i]],x[[j]]],{i,M},{j,M}] //ExpandAll//Simplify;
+e=Table[D[X[[j]],x[[i]]],{i,2},{j,3}] //ExpandAll//Simplify;
 
 (* Metric tensor *)
 
@@ -62,4 +62,4 @@ DR=Table[D[cR[[i,j,k,l]],x[[m]]]
 (* Bianchi identities *)
   
 Table[DR[[i,j,k,l,m]]+DR[[i,j,l,m,k]]+DR[[i,j,m,k,l]],
-      {h,M},{i,M},{j,M},{k,M},{l,M}] //ExpandAll//Simplify;
+      {i,M},{j,M},{k,M},{l,M},{m,M}] //ExpandAll//Simplify;
