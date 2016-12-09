@@ -4,12 +4,11 @@
 
 (define $X [|(* '(+ (* a (cos θ)) b) (cos φ)) ; = x
              (* '(+ (* a (cos θ)) b) (sin φ)) ; = y
-             (* a (sin θ))                    ; = z
-             |])
+             (* a (sin θ))|])                 ; = z
 
 ;; Local coordinates
 
-(define $e ((∂/∂ X_# $) x~#))
+(define $e ((∂/∂ X_# $) x_#))
 
 ;; Metric tensor
 
@@ -19,11 +18,11 @@
 ;; Christoffel symbols of the first kind
 
 (define $Γ___
-  (with-symbols {j k l}
+  (with-symbols {i j k}
     (* (/ 1 2)
-       (+ (∂/∂ g_j_l x_k)
-          (∂/∂ g_j_k x_l)
-          (* -1 (∂/∂ g_k_l x_j))))))
+       (+ (∂/∂ g_i_j x_k)
+          (∂/∂ g_i_k x_j)
+          (* -1 (∂/∂ g_j_k x_i))))))
 
 ;; Christoffel symbols of the second kind
 
@@ -46,7 +45,7 @@
 
 ;; Scalar curvature
 
-(define $scalar-curvature (with-symbols {j k} (. g~j~k Ric_j_k)))
+(define $scalar-curvature (with-symbols {i j} (. g~i~j Ric_i_j)))
 
 ;; Covariant derivative of Riemann curvature tensor
 
