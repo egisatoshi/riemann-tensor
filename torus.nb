@@ -1,0 +1,76 @@
+Off[General::spell];
+Off[General::spell1];
+Clear["Global'*"]
+
+(* Coordinates for torus *)
+  
+M=2;
+
+x={θ,φ};
+
+X={(a*Cos[θ]+b)Cos[φ],
+   (a*Cos[θ]+b)Sin[φ],
+   a*Sin[θ]};
+
+(* Local coordinates *)
+
+e=Table[D[X[[i]],x[[j]]],{i,M},{j,M}] //ExpandAll//Simplify;
+
+(* Metric tensor *)
+
+g=Table[e[[i]].e[[j]],{i,M},{j,M}] //ExpandAll//Simplify;
+
+Ig=Inverse[g] //ExpandAll//Simplify;
+
+(* Christoffel symbol of the first kind *)
+Chr1=Table[D[g[[i,j]],x[[k]]]
+          +D[g[[i,k]],x[[j]]]
+          -D[g[[j,k]],x[[i]]],
+           {i,M},{j,M},{k,M}]/2 //ExpandAll//Simplify;
+
+(* Christoffel symbol of the second kind *)
+Chr2=Table[Sum[Ig[[i,l]]Chr1[[l,j,k]],{l,M}],
+          {i,M},{j,M},{k,M}]//ExpandAll//Simplify;
+
+(* Riemann curvature tensor *)
+DChr=Table[ D[Chr2[[h,k,i]],x[[j]]]
+           -D[Chr2[[h,j,i]],x[[k]]],
+            {h,M},{i,M},{j,M},{k,M} 
+           ] //ExpandAll//Simplify;
+
+CChr=Table[ Sum[ Chr2[[h,j,l]]Chr2[[l,k,i]]
+                -Chr2[[h,k,l]]Chr2[[l,j,i]],
+                {l,M}],
+            {h,M},{i,M},{j,M},{k,M}
+            ]//ExpandAll//Simplify;
+
+R4=DChr+CChr //ExpandAll//Simplify;
+
+cR4=Table[Sum[g[[h,l]]R4[[l,i,j,k]],{l,M}],
+          {h,M},{i,M},{j,M},{k,M} ];
+
+(* Ricci tensor *)
+Ric=Table[Sum[R4[[h,i,j,h]],
+          {h,M}],{i,M},{j,M}] //ExpandAll//Simplify;
+  
+(* Scalar curvature *)
+R=Sum[Ig[[i,j]]Ric[[i,j]],
+      {i,M},{j,M}] //ExpandAll//Simplify;
+
+(* Covariant derivative of Riemann curvature tensor *)
+  
+DR=Table[ D[R4[[h,i,j,k]],x[[l]]]
+         +Sum[Chr2[[h,l,m]]R4[[m,i,j,k]],{m,M}]
+         -Sum[Chr2[[m,l,i]]R4[[h,m,j,k]],{m,M}]
+         -Sum[Chr2[[m,l,j]]R4[[h,i,m,k]],{m,M}]
+         -Sum[Chr2[[m,l,k]]R4[[h,i,j,m]],{m,M}],
+          {h,M},{i,M},{j,M},{k,M},{l,M} 
+         ] //ExpandAll //Simplify;
+  
+(* Bianchi identities *)
+  
+Table[ DR[[i,j,k,l,m]]
+      +DR[[i,j,l,m,k]]
+      +DR[[i,j,m,k,l]] ,
+       {h,M},{i,M},{j,M},{k,M},{l,M}
+      ] //ExpandAll //Simplify;
